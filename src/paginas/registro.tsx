@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { CheckCircle2Icon } from 'lucide-react'
+import { EntregasPendientes } from '@/components/entregas-pendientes'
 import { Campo, ErrorFormulario, EstadoDatos } from '@/components/formulario'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -81,6 +82,7 @@ export function PaginaRegistro() {
 
   return (
     <div className="flex flex-col gap-4">
+      <EntregasPendientes />
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
         <Card>
           <CardHeader>

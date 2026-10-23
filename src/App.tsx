@@ -6,13 +6,24 @@ import { Button } from '@/components/ui/button'
 import { useSesion } from '@/hooks/use-sesion'
 import { configuracionCompleta } from '@/lib/supabase'
 import { NOMBRE_ROL, type Rol } from '@/lib/tipos'
+import { PaginaAlertas } from '@/paginas/alertas'
 import { PaginaCatalogos } from '@/paginas/catalogos'
 import { PaginaInicio } from '@/paginas/inicio'
 import { PaginaInicioSesion } from '@/paginas/inicio-sesion'
+import { PaginaPedido } from '@/paginas/pedido'
 import { PaginaPerfiles } from '@/paginas/perfiles'
 import { PaginaRegistro } from '@/paginas/registro'
+import { PaginaTablero } from '@/paginas/tablero'
 
-const SECCIONES = ['inicio', 'registro', 'catalogos', 'perfiles'] as const
+const SECCIONES = [
+  'inicio',
+  'alertas',
+  'tablero',
+  'pedido',
+  'registro',
+  'catalogos',
+  'perfiles',
+] as const
 type Seccion = (typeof SECCIONES)[number]
 
 // Cada rol ve su propio menú. El operativo sólo lo que usa a diario;
@@ -20,12 +31,16 @@ type Seccion = (typeof SECCIONES)[number]
 const MENU: Record<Rol, { seccion: Seccion; etiqueta: string }[]> = {
   gerente: [
     { seccion: 'inicio', etiqueta: 'Inicio' },
+    { seccion: 'alertas', etiqueta: 'Alertas' },
+    { seccion: 'tablero', etiqueta: 'Tablero' },
+    { seccion: 'pedido', etiqueta: 'Pedido' },
     { seccion: 'registro', etiqueta: 'Registro' },
     { seccion: 'catalogos', etiqueta: 'Catálogos' },
     { seccion: 'perfiles', etiqueta: 'Usuarios' },
   ],
   operativo: [
     { seccion: 'inicio', etiqueta: 'Inicio' },
+    { seccion: 'alertas', etiqueta: 'Alertas' },
     { seccion: 'registro', etiqueta: 'Registro' },
     { seccion: 'perfiles', etiqueta: 'Mi perfil' },
   ],
@@ -119,7 +134,13 @@ export default function App() {
         </div>
       </header>
       <main className="mx-auto max-w-5xl p-4">
-        {visible === 'registro' ? (
+        {visible === 'alertas' ? (
+          <PaginaAlertas />
+        ) : visible === 'tablero' ? (
+          <PaginaTablero />
+        ) : visible === 'pedido' ? (
+          <PaginaPedido />
+        ) : visible === 'registro' ? (
           <PaginaRegistro />
         ) : visible === 'perfiles' ? (
           <PaginaPerfiles />

@@ -97,6 +97,66 @@ export interface ResumenMotor {
   activaciones: { iteracion: number; regla: string; entidad: string; severidad: Severidad }[]
 }
 
+// --- Tablero (vistas de indicadores) -----------------------------------------
+
+export interface Cobertura {
+  insumo_id: number
+  nombre: string
+  unidad: Unidad
+  activo: boolean
+  existencia: number
+  cpd: number
+  dc: number | null
+  dias_hasta_reposicion: number
+  riesgo_faltante: boolean
+}
+
+export interface RiesgoMerma {
+  lote_id: number
+  insumo_id: number
+  cantidad_actual: number
+  drc: number
+  qr: number
+}
+
+export interface KpiSuministro {
+  nivel: 'insumo' | 'proveedor'
+  insumo_id: number | null
+  proveedor_id: number | null
+  nombre: string
+  consumo: number | null
+  merma: number | null
+  rotacion: number | null
+  pct_merma: number | null
+  entregas_totales: number | null
+  entregas_ok: number | null
+  tcp: number | null
+}
+
+export interface KpiServicio {
+  franja: string
+  evaluada: boolean
+  comandas: number
+  prom_preparacion_min: number | null
+  prom_total_min: number | null
+  uf_preparacion_min: number | null
+  uf_total_min: number | null
+}
+
+export interface PedidoSugerido {
+  insumo_id: number
+  nombre: string
+  unidad: Unidad
+  proveedor_id: number | null
+  proveedor: string | null
+  cpd: number
+  existencia: number
+  lead_time_dias: number
+  r_dias: number
+  np: number
+  q: number
+}
+
 export interface Insumo {
   id: number
   nombre: string

@@ -2,6 +2,11 @@ export function formatoCantidad(valor: number | string) {
   return Number(valor).toLocaleString('es', { maximumFractionDigits: 3 })
 }
 
+/** Número con a lo sumo n decimales: 3,456 → "3,5" con n = 1. */
+export function formatoNumero(valor: number | string, decimales = 1) {
+  return Number(valor).toLocaleString('es', { maximumFractionDigits: decimales })
+}
+
 /** "2026-10-24" → "24/10/2026" (sin desfase de zona horaria). */
 export function formatoFecha(iso: string) {
   const [a, m, d] = iso.slice(0, 10).split('-')

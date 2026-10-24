@@ -132,7 +132,9 @@ function FilaComanda({
   return (
     <div
       className={`flex flex-col gap-2 rounded-lg border p-3 sm:flex-row sm:items-center ${
-        c.lenta && c.servicio_en_curso ? 'border-red-300 bg-red-50' : 'bg-background'
+        c.lenta && c.servicio_en_curso
+          ? 'border-l-4 border-riesgo/40 border-l-riesgo bg-riesgo-suave'
+          : 'bg-background'
       }`}
     >
       <div className="flex flex-1 flex-col gap-1">

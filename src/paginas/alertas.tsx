@@ -25,10 +25,19 @@ const COLUMNAS =
 const ORDEN_SEVERIDAD: Record<Severidad, number> = { ALTA: 0, MEDIA: 1, BAJA: 2 }
 
 const ESTILO_SEVERIDAD: Record<Severidad, string> = {
-  ALTA: 'bg-red-100 text-red-900',
-  MEDIA: 'bg-amber-100 text-amber-900',
-  BAJA: 'bg-sky-100 text-sky-900',
+  ALTA: 'bg-riesgo-suave text-riesgo',
+  MEDIA: 'bg-aviso-suave text-[oklch(0.45_0.10_65)]',
+  BAJA: 'bg-secondary text-secondary-foreground',
 }
+
+// Franja de color a la izquierda de cada alerta: la gravedad se ve de un vistazo.
+const BORDE_SEVERIDAD: Record<Severidad, string> = {
+  ALTA: 'border-l-riesgo',
+  MEDIA: 'border-l-aviso',
+  BAJA: 'border-l-chart-2',
+}
+
+const NOMBRE_SEVERIDAD: Record<Severidad, string> = { ALTA: 'Alta', MEDIA: 'Media', BAJA: 'Baja' }
 
 // Acciones de un toque por tipo de alerta (RNF-01: atender en segundos).
 // Siempre queda "Otra acción" para escribirla.
@@ -98,11 +107,11 @@ export function PaginaAlertas() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid w-fit grid-cols-2 gap-1" role="tablist">
+      <div className="grid w-fit grid-cols-2 gap-1 rounded-lg bg-muted p-1" role="tablist">
         <Button
           role="tab"
           aria-selected={vista === 'abiertas'}
-          variant={vista === 'abiertas' ? 'default' : 'outline'}
+          variant={vista === 'abiertas' ? 'default' : 'ghost'}
           onClick={() => setVista('abiertas')}
         >
           Abiertas ({listaAbiertas.length})
@@ -110,7 +119,7 @@ export function PaginaAlertas() {
         <Button
           role="tab"
           aria-selected={vista === 'historial'}
-          variant={vista === 'historial' ? 'default' : 'outline'}
+          variant={vista === 'historial' ? 'default' : 'ghost'}
           onClick={() => setVista('historial')}
         >
           Historial
@@ -128,20 +137,20 @@ export function PaginaAlertas() {
           <CardContent className="flex flex-col gap-3">
             <EstadoDatos error={abiertas.error} desdeCopia={abiertas.desdeCopia} />
             {!abiertas.cargando && listaAbiertas.length === 0 && (
-              <p className="flex items-center gap-2 text-sm text-emerald-700">
+              <p className="flex items-center gap-2 rounded-lg bg-ok-suave px-3 py-3 text-sm text-[oklch(0.38_0.08_165)]">
                 <CheckCircle2Icon className="size-4" aria-hidden="true" />
-                No hay alertas abiertas.
+                No hay alertas abiertas. Todo en orden.
               </p>
             )}
             {listaAbiertas.map((a) => (
               <div
                 key={a.id}
-                className="flex flex-col gap-2 rounded-lg border bg-background p-3 sm:flex-row sm:items-start"
+                className={`flex flex-col gap-2 rounded-lg border border-l-4 bg-background p-3 sm:flex-row sm:items-center ${BORDE_SEVERIDAD[a.severidad]}`}
               >
                 <div className="flex flex-1 flex-col gap-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge className={ESTILO_SEVERIDAD[a.severidad]}>
-                      {a.severidad.toLowerCase()}
+                      {NOMBRE_SEVERIDAD[a.severidad]}
                     </Badge>
                     <span className="font-medium">{NOMBRE_TIPO_ALERTA[a.tipo] ?? a.tipo}</span>
                     <span className="text-xs text-muted-foreground tabular-nums">
@@ -178,7 +187,7 @@ export function PaginaAlertas() {
               <div key={a.id} className="flex flex-col gap-1 rounded-lg border bg-background p-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge className={ESTILO_SEVERIDAD[a.severidad]}>
-                    {a.severidad.toLowerCase()}
+                    {NOMBRE_SEVERIDAD[a.severidad]}
                   </Badge>
                   <span className="font-medium">{NOMBRE_TIPO_ALERTA[a.tipo] ?? a.tipo}</span>
                   <span className="text-xs text-muted-foreground tabular-nums">

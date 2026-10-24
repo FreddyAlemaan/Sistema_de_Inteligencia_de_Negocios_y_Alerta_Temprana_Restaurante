@@ -39,6 +39,7 @@ const ACCIONES: Record<string, string[]> = {
   FALTANTE_CRITICO: ['Se aumentó el próximo pedido', 'Se pidió a un proveedor alterno'],
   SOBRESTOCK: ['Se redujo el próximo pedido', 'Se promocionó en el menú'],
   SOBRECOMPRA: ['Se redujo el próximo pedido', 'Se usó primero en cocina'],
+  SERVICIO_LENTO: ['Se priorizó la comanda', 'Se reforzó la cocina', 'Se avisó a la mesa'],
 }
 
 type Vista = 'abiertas' | 'historial'

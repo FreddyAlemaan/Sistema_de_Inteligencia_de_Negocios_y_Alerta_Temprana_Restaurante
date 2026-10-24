@@ -63,6 +63,16 @@ export function AlertasEmergentes() {
         { event: 'INSERT', schema: 'public', table: 'alerta' },
         (cambio) => mostrarAlerta(cambio.new as Alerta),
       )
+      // Una alerta de servicio lento abierta sólo se actualiza cuando el
+      // retraso sube de severidad: se vuelve a avisar.
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'alerta' },
+        (cambio) => {
+          const alerta = cambio.new as Alerta
+          if (alerta.tipo === 'SERVICIO_LENTO' && alerta.estado === 'ABIERTA') mostrarAlerta(alerta)
+        },
+      )
       .subscribe()
 
     return () => {

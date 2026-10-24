@@ -5,7 +5,7 @@
 -- igual el día que se cargue.
 --
 -- 3 proveedores · 15 insumos · 20 lotes · 60 movimientos (20 entradas +
--- 40 consumos/mermas) · 17 entregas · 15 comandas
+-- 40 consumos/mermas) · 17 entregas · 15 comandas cerradas + 2 abiertas
 --
 -- Escenarios que deben disparar reglas (se verificarán en el paso 6):
 --   R1  Lapas (L3, caduca mañana), Polvo (L4, mañana), Maracujá (L11, +2 días),
@@ -18,6 +18,10 @@
 --   R4  ⇒ R2 + R3 sobre Camarão y Manteiga → ALTA, aumentar pedido
 --   R5  Natas: 46 l en existencia para un consumo de ≈0,13 l/día (>> 2 × 20 días)
 --   R6  ⇒ R1(L16) + R5(Natas) → sobrecompra, reducir próximo pedido
+--   R7  Mesa 11, abierta hace 70 min y sin salir de cocina: supera el Uf de
+--       almuerzo (≈19 min) y de cena (≈48 min). Sólo se evalúa si el seed se
+--       carga dentro de una franja de servicio (almuerzo 12–16, cena 19–23):
+--       fuera de servicio no se vigilan tiempos, por diseño.
 --
 -- Los movimientos y comandas se cargan sin usuario_id (aún no hay usuarios);
 -- la app siempre los registrará a nombre de quien opera.
@@ -227,3 +231,9 @@ from (values
   ('2',  2, 3, time '19:45', 28, 45),
   ('8',  4, 3, time '20:20', 39, 58)
 ) as c(mesa, comensales, dias, apertura, min_listo, min_cierre);
+
+-- Dos mesas abiertas ahora mismo: la 11 lleva 70 min sin salir de cocina (R7)
+-- y la 12 acaba de abrirse.
+insert into public.comanda (mesa, comensales, t_apertura, usuario_id) values
+  ('11', 4, now() - interval '70 minutes', null),
+  ('12', 2, now() - interval '5 minutes',  null);

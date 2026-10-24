@@ -84,6 +84,7 @@ export const NOMBRE_TIPO_ALERTA: Record<string, string> = {
   FALTANTE_CRITICO: 'Faltante crítico',
   SOBRESTOCK: 'Sobrestock',
   SOBRECOMPRA: 'Sobrecompra',
+  SERVICIO_LENTO: 'Servicio lento',
 }
 
 export interface ResumenMotor {
@@ -141,6 +142,21 @@ export interface KpiServicio {
   prom_total_min: number | null
   uf_preparacion_min: number | null
   uf_total_min: number | null
+}
+
+// --- Comandas -----------------------------------------------------------------
+
+export interface ComandaAbierta {
+  id: number
+  mesa: string
+  comensales: number
+  t_apertura: string
+  t_listo: string | null
+  franja: string | null
+  servicio_en_curso: boolean
+  minutos_preparacion: number
+  uf_preparacion_min: number | null
+  lenta: boolean
 }
 
 export interface PedidoSugerido {

@@ -8,6 +8,7 @@ import { configuracionCompleta } from '@/lib/supabase'
 import { NOMBRE_ROL, type Rol } from '@/lib/tipos'
 import { PaginaAlertas } from '@/paginas/alertas'
 import { PaginaCatalogos } from '@/paginas/catalogos'
+import { PaginaComandas } from '@/paginas/comandas'
 import { PaginaInicio } from '@/paginas/inicio'
 import { PaginaInicioSesion } from '@/paginas/inicio-sesion'
 import { PaginaPedido } from '@/paginas/pedido'
@@ -18,6 +19,7 @@ import { PaginaTablero } from '@/paginas/tablero'
 const SECCIONES = [
   'inicio',
   'alertas',
+  'comandas',
   'tablero',
   'pedido',
   'registro',
@@ -32,6 +34,7 @@ const MENU: Record<Rol, { seccion: Seccion; etiqueta: string }[]> = {
   gerente: [
     { seccion: 'inicio', etiqueta: 'Inicio' },
     { seccion: 'alertas', etiqueta: 'Alertas' },
+    { seccion: 'comandas', etiqueta: 'Comandas' },
     { seccion: 'tablero', etiqueta: 'Tablero' },
     { seccion: 'pedido', etiqueta: 'Pedido' },
     { seccion: 'registro', etiqueta: 'Registro' },
@@ -41,6 +44,7 @@ const MENU: Record<Rol, { seccion: Seccion; etiqueta: string }[]> = {
   operativo: [
     { seccion: 'inicio', etiqueta: 'Inicio' },
     { seccion: 'alertas', etiqueta: 'Alertas' },
+    { seccion: 'comandas', etiqueta: 'Comandas' },
     { seccion: 'registro', etiqueta: 'Registro' },
     { seccion: 'perfiles', etiqueta: 'Mi perfil' },
   ],
@@ -136,6 +140,8 @@ export default function App() {
       <main className="mx-auto max-w-5xl p-4">
         {visible === 'alertas' ? (
           <PaginaAlertas />
+        ) : visible === 'comandas' ? (
+          <PaginaComandas />
         ) : visible === 'tablero' ? (
           <PaginaTablero />
         ) : visible === 'pedido' ? (

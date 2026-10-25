@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
-import type { Perfil } from '@/lib/tipos'
+import { PERMISOS_INICIALES, type Perfil, type Permiso } from '@/lib/tipos'
 
 interface EstadoSesion {
   sesion: Session | null
@@ -12,6 +12,8 @@ interface EstadoSesion {
   perfilDesdeCopia: boolean
   errorPerfil: string | null
   esGerente: boolean
+  /** El gerente puede todo; el operativo, lo que el gerente le haya encendido */
+  puede: (permiso: Permiso) => boolean
   recargarPerfil: () => Promise<void>
   cerrarSesion: () => Promise<void>
 }
@@ -25,7 +27,10 @@ const clavePerfil = (id: string) => `sinat.perfil.${id}`
 function leerCopia(id: string): Perfil | null {
   try {
     const crudo = localStorage.getItem(clavePerfil(id))
-    return crudo ? (JSON.parse(crudo) as Perfil) : null
+    if (!crudo) return null
+    const copia = JSON.parse(crudo) as Perfil
+    // Copias guardadas antes de que existieran los permisos
+    return { ...copia, permisos: copia.permisos ?? PERMISOS_INICIALES }
   } catch {
     return null
   }
@@ -49,7 +54,7 @@ export function ProveedorSesion({ children }: { children: ReactNode }) {
   const cargarPerfil = useCallback(async (usuarioId: string) => {
     const { data, error } = await supabase
       .from('perfil')
-      .select('id, nombre, rol, creado_en')
+      .select('id, nombre, rol, permisos, creado_en')
       .eq('id', usuarioId)
       .maybeSingle()
 
@@ -131,6 +136,8 @@ export function ProveedorSesion({ children }: { children: ReactNode }) {
         perfilDesdeCopia,
         errorPerfil,
         esGerente: perfil?.rol === 'gerente',
+        puede: (permiso) =>
+          perfil?.rol === 'gerente' || (perfil?.permisos ?? []).includes(permiso),
         recargarPerfil,
         cerrarSesion,
       }}

@@ -29,7 +29,8 @@ import { supabase } from '@/lib/supabase'
 import type { Proveedor } from '@/lib/tipos'
 
 export function PaginaProveedores() {
-  const { esGerente } = useSesion()
+  const { puede } = useSesion()
+  const puedeEditar = puede('catalogos')
   const [verInactivos, setVerInactivos] = useState(false)
   // null = cerrado · 'nuevo' = alta · Proveedor = edición
   const [editando, setEditando] = useState<Proveedor | 'nuevo' | null>(null)
@@ -51,7 +52,7 @@ export function PaginaProveedores() {
           <Checkbox checked={verInactivos} onCheckedChange={(v) => setVerInactivos(v)} />
           Mostrar inactivos
         </Label>
-        {esGerente && (
+        {puedeEditar && (
           <Button className="ml-auto" onClick={() => setEditando('nuevo')}>
             <PlusIcon /> Nuevo proveedor
           </Button>
@@ -67,7 +68,7 @@ export function PaginaProveedores() {
             <TableHead className="text-right">Plazo de entrega</TableHead>
             <TableHead>Contacto</TableHead>
             <TableHead>Estado</TableHead>
-            {esGerente && <TableHead className="w-0" />}
+            {puedeEditar && <TableHead className="w-0" />}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -83,7 +84,7 @@ export function PaginaProveedores() {
                   {p.activo ? 'Activo' : 'Inactivo'}
                 </Badge>
               </TableCell>
-              {esGerente && (
+              {puedeEditar && (
                 <TableCell>
                   <Button
                     variant="ghost"

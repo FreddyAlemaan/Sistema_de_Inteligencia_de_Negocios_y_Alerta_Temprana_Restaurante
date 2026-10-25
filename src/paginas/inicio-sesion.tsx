@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
-import { BellIcon, ConciergeBellIcon, HourglassIcon, WavesIcon } from 'lucide-react'
+import { BellIcon, ConciergeBellIcon, HourglassIcon } from 'lucide-react'
+import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -35,9 +36,7 @@ export function PaginaInicioSesion() {
       <section className="relative hidden overflow-hidden bg-sidebar p-12 text-sidebar-foreground lg:flex lg:flex-col">
         <Olas />
         <div className="relative flex items-center gap-3">
-          <span className="grid size-11 place-items-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground">
-            <WavesIcon className="size-6" aria-hidden="true" />
-          </span>
+          <Logo className="size-11" />
           <span className="font-heading text-2xl font-semibold text-sidebar-accent-foreground">
             SIN&amp;AT
           </span>
@@ -73,9 +72,7 @@ export function PaginaInicioSesion() {
       <section className="flex items-center justify-center p-6">
         <div className="flex w-full max-w-sm flex-col gap-8 duration-500 animate-in fade-in slide-in-from-bottom-2">
           <div className="flex flex-col gap-2">
-            <span className="grid size-11 place-items-center rounded-full bg-primary text-primary-foreground lg:hidden">
-              <WavesIcon className="size-6" aria-hidden="true" />
-            </span>
+            <Logo className="size-11 lg:hidden" />
             <h2 className="font-heading text-3xl font-semibold tracking-tight">Bienvenido</h2>
             <p className="text-sm text-muted-foreground">
               Entra con el correo y la contraseña que te dio el gerente.

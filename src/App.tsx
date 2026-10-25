@@ -1,12 +1,13 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { LogOutIcon, MenuIcon, WavesIcon, XIcon } from 'lucide-react'
+import { BellIcon, LogOutIcon, MenuIcon, XIcon } from 'lucide-react'
 import { AvisoConexion } from '@/components/aviso-conexion'
+import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import { useAlertasAbiertas } from '@/hooks/use-alertas-abiertas'
 import { useSesion } from '@/hooks/use-sesion'
 import {
   INFO,
-  MENU,
+  menuPara,
   etiquetaPara,
   irA,
   leerSeccion,
@@ -98,7 +99,7 @@ function Aplicacion({
   const alertas = useAlertasAbiertas()
 
   // Una sección fuera del menú del rol (p. ej. #catalogos escrito a mano) cae en Inicio.
-  const permitidas = MENU[perfil.rol].flatMap((g) => g.secciones)
+  const permitidas = menuPara(perfil).flatMap((g) => g.secciones)
   const visible = permitidas.includes(seccion) ? seccion : 'inicio'
   const info = INFO[visible]
 
@@ -118,19 +119,27 @@ function Aplicacion({
   )
 
   return (
-    <div className="min-h-svh lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
-      {/* Escritorio: menú siempre a la vista */}
-      <aside className="sticky top-0 hidden h-svh lg:block">{menu}</aside>
+    <div className="min-h-svh md:grid md:grid-cols-[14.5rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,1fr)]">
+      {/* Escritorio y ventana mediana: menú siempre a la vista */}
+      <aside className="sticky top-0 hidden h-svh md:block">{menu}</aside>
 
       {/* Móvil: barra superior + menú desplegable */}
-      <header className="sticky top-0 z-30 flex items-center gap-3 bg-sidebar px-4 py-3 text-sidebar-foreground lg:hidden">
+      <header className="sticky top-0 z-30 flex items-center gap-2 bg-sidebar px-4 py-3 text-sidebar-foreground md:hidden">
         <Marca />
+        {/* Siempre visible, con o sin alertas abiertas: es el acceso más importante */}
         <button
           type="button"
           onClick={() => elegir('alertas')}
-          className="ml-auto"
-          aria-label={`${alertas?.total ?? 0} alertas abiertas`}
+          className={cn(
+            'ml-auto flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
+            visible === 'alertas'
+              ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+              : 'hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
+          )}
+          aria-label={`Alertas: ${alertas?.total ?? 0} abiertas`}
         >
+          <BellIcon className="size-[1.1rem]" aria-hidden="true" />
+          <span className="max-[380px]:sr-only">Alertas</span>
           <ContadorAlertas alertas={alertas} />
         </button>
         <Button
@@ -144,7 +153,7 @@ function Aplicacion({
         </Button>
       </header>
       {menuAbierto && (
-        <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true">
           <button
             type="button"
             aria-label="Cerrar menú"
@@ -190,9 +199,7 @@ function Aplicacion({
 function Marca() {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="grid size-9 place-items-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground">
-        <WavesIcon className="size-5" aria-hidden="true" />
-      </span>
+      <Logo />
       <span className="flex flex-col leading-none">
         <span className="font-heading text-lg font-semibold tracking-tight text-sidebar-accent-foreground">
           SIN&amp;AT
@@ -252,7 +259,7 @@ function MenuLateral({
         <Marca />
       </div>
       <nav className="flex flex-1 flex-col gap-5 overflow-y-auto px-3 pb-4" aria-label="Menú principal">
-        {MENU[perfil.rol].map((g) => (
+        {menuPara(perfil).map((g) => (
           <div key={g.grupo} className="flex flex-col gap-0.5">
             <span className="px-3 pb-1 text-[0.68rem] font-semibold tracking-[0.14em] text-sidebar-foreground/50 uppercase">
               {g.grupo}

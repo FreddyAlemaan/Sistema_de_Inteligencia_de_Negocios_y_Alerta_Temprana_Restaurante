@@ -34,7 +34,8 @@ const COLUMNAS_INSUMO =
   'id, nombre, unidad, categoria, proveedor_id, dias_alerta_caducidad, vida_util_dias, stock_minimo, activo'
 
 export function PaginaInsumos() {
-  const { esGerente } = useSesion()
+  const { puede } = useSesion()
+  const puedeEditar = puede('catalogos')
   const [busqueda, setBusqueda] = useState('')
   const [verInactivos, setVerInactivos] = useState(false)
   const [editando, setEditando] = useState<Insumo | 'nuevo' | null>(null)
@@ -77,7 +78,7 @@ export function PaginaInsumos() {
           <Checkbox checked={verInactivos} onCheckedChange={(v) => setVerInactivos(v)} />
           Mostrar inactivos
         </Label>
-        {esGerente && (
+        {puedeEditar && (
           <Button className="ml-auto" onClick={() => setEditando('nuevo')}>
             <PlusIcon /> Nuevo insumo
           </Button>
@@ -96,7 +97,7 @@ export function PaginaInsumos() {
             <TableHead className="text-right">Avisar caducidad</TableHead>
             <TableHead className="text-right">Stock mínimo</TableHead>
             <TableHead>Estado</TableHead>
-            {esGerente && <TableHead className="w-0" />}
+            {puedeEditar && <TableHead className="w-0" />}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -117,7 +118,7 @@ export function PaginaInsumos() {
                   {i.activo ? 'Activo' : 'Inactivo'}
                 </Badge>
               </TableCell>
-              {esGerente && (
+              {puedeEditar && (
                 <TableCell>
                   <Button
                     variant="ghost"

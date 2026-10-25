@@ -11,7 +11,16 @@ createRoot(document.getElementById('root')!).render(
     <ProveedorSesion>
       <App />
       <AlertasEmergentes />
-      <Toaster position="top-right" richColors closeButton expand visibleToasts={5} />
+      {/* Debajo de la barra superior del móvil, para no tapar Alertas ni el menú */}
+      <Toaster
+        position="top-right"
+        offset={{ top: 24, right: 24 }}
+        mobileOffset={{ top: 72 }}
+        richColors
+        closeButton
+        expand
+        visibleToasts={5}
+      />
     </ProveedorSesion>
   </StrictMode>,
 )

@@ -9,7 +9,7 @@ import {
   UsersIcon,
   type LucideIcon,
 } from 'lucide-react'
-import type { Rol } from '@/lib/tipos'
+import type { Perfil, Permiso, Rol } from '@/lib/tipos'
 
 export const SECCIONES = [
   'inicio',
@@ -83,20 +83,33 @@ export const INFO: Record<Seccion, InfoSeccion> = {
   },
 }
 
-// Cada rol ve su propio menú, agrupado por tarea. El operativo sólo lo que usa
-// a diario; los permisos reales los sigue imponiendo RLS en la base de datos.
-export const MENU: Record<Rol, { grupo: string; secciones: Seccion[] }[]> = {
-  gerente: [
-    { grupo: 'Hoy', secciones: ['inicio', 'alertas', 'comandas'] },
-    { grupo: 'Inventario', secciones: ['registro', 'pedido'] },
-    { grupo: 'Análisis', secciones: ['tablero'] },
-    { grupo: 'Ajustes', secciones: ['catalogos', 'perfiles'] },
-  ],
-  operativo: [
-    { grupo: 'Hoy', secciones: ['inicio', 'alertas', 'comandas'] },
-    { grupo: 'Inventario', secciones: ['registro'] },
-    { grupo: 'Cuenta', secciones: ['perfiles'] },
-  ],
+// Menú agrupado por tarea. El gerente lo ve entero; el operativo, sólo las
+// secciones que el gerente le encendió. Los permisos reales los impone la base.
+const MENU_COMPLETO: { grupo: string; secciones: Seccion[] }[] = [
+  { grupo: 'Hoy', secciones: ['inicio', 'alertas', 'comandas'] },
+  { grupo: 'Inventario', secciones: ['registro', 'pedido'] },
+  { grupo: 'Análisis', secciones: ['tablero'] },
+  { grupo: 'Ajustes', secciones: ['catalogos', 'perfiles'] },
+]
+
+/** Permiso que hace falta para ver cada sección (las demás las ve todo el mundo). */
+const PERMISO_DE: Partial<Record<Seccion, Permiso>> = {
+  comandas: 'comandas',
+  registro: 'registro',
+  tablero: 'tablero',
+  pedido: 'pedido',
+  catalogos: 'catalogos',
+}
+
+export function menuPara(perfil: Pick<Perfil, 'rol' | 'permisos'>) {
+  const visible = (s: Seccion) => {
+    const permiso = PERMISO_DE[s]
+    return perfil.rol === 'gerente' || !permiso || perfil.permisos.includes(permiso)
+  }
+  return MENU_COMPLETO.map((g) => ({
+    grupo: perfil.rol === 'operativo' && g.grupo === 'Ajustes' ? 'Cuenta' : g.grupo,
+    secciones: g.secciones.filter(visible),
+  })).filter((g) => g.secciones.length > 0)
 }
 
 export const etiquetaPara = (seccion: Seccion, rol: Rol) =>

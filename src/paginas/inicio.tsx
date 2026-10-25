@@ -53,7 +53,7 @@ function saludo() {
 }
 
 export function PaginaInicio() {
-  const { perfil, esGerente } = useSesion()
+  const { perfil, esGerente, puede } = useSesion()
 
   const alertas = useConsulta<Pick<Alerta, 'id' | 'tipo' | 'severidad' | 'mensaje' | 'creada_en'>[]>(
     'inicio-alertas',
@@ -154,12 +154,12 @@ export function PaginaInicio() {
           cifra={porCaducar}
           detalle={porCaducar === 0 ? 'Nada en los próximos 2 días' : 'insumos en 2 días o menos'}
           tono={porCaducar > 0 ? 'aviso' : 'ok'}
-          destino={esGerente ? 'tablero' : 'registro'}
+          destino={puede('tablero') ? 'tablero' : 'registro'}
           retardo={180}
         />
       </div>
 
-      <div className={cn('grid gap-4', esGerente && 'lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]')}>
+      <div className={cn('grid gap-4', puede('pedido') && 'lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]')}>
         <Card>
           <CardHeader className="flex flex-row items-start justify-between gap-2">
             <div className="flex flex-col gap-1">
@@ -215,7 +215,7 @@ export function PaginaInicio() {
           </CardContent>
         </Card>
 
-        {esGerente && <PedidoDelLunes />}
+        {puede('pedido') && <PedidoDelLunes />}
       </div>
 
       {esGerente && <EvaluacionMotor />}

@@ -9,7 +9,7 @@ import { PaginaProveedores } from '@/paginas/proveedores'
 type Pestana = 'insumos' | 'proveedores'
 
 export function PaginaCatalogos() {
-  const { esGerente } = useSesion()
+  const { puede } = useSesion()
   const [pestana, setPestana] = useState<Pestana>('insumos')
 
   return (
@@ -30,7 +30,7 @@ export function PaginaCatalogos() {
           ))}
         </div>
         <CardDescription>
-          {esGerente
+          {puede('catalogos')
             ? 'Para dejar de usar un insumo o proveedor, edítalo y desmarca "activo": el historial se conserva.'
             : 'Consulta de insumos y proveedores. Sólo el gerente puede modificarlos.'}
         </CardDescription>

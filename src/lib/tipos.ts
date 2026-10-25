@@ -1,9 +1,28 @@
 export type Rol = 'gerente' | 'operativo'
 
+/** Lo que el gerente puede encender o apagar a cada operativo (perfil.permisos). */
+export type Permiso = 'comandas' | 'registro' | 'tablero' | 'pedido' | 'catalogos'
+
+export const PERMISOS: { permiso: Permiso; nombre: string; descripcion: string }[] = [
+  { permiso: 'comandas', nombre: 'Comandas', descripcion: 'Abrir mesas, marcar "Listo" y cerrar.' },
+  {
+    permiso: 'registro',
+    nombre: 'Registro de inventario',
+    descripcion: 'Anotar recepciones, consumos, mermas y entregas que llegan.',
+  },
+  { permiso: 'tablero', nombre: 'Tablero', descripcion: 'Ver los indicadores del restaurante.' },
+  { permiso: 'pedido', nombre: 'Pedido sugerido', descripcion: 'Ver el pedido del lunes y confirmarlo.' },
+  { permiso: 'catalogos', nombre: 'Editar catálogos', descripcion: 'Agregar y cambiar insumos y proveedores.' },
+]
+
+/** Los que tiene un operativo recién creado (igual que el valor por defecto en la base). */
+export const PERMISOS_INICIALES: Permiso[] = ['comandas', 'registro']
+
 export interface Perfil {
   id: string
   nombre: string
   rol: Rol
+  permisos: Permiso[]
   creado_en: string
 }
 
